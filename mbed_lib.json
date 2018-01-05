@@ -24,6 +24,12 @@
             "SPI_MISO": "p21",
             "SPI_CLK":  "p19",
             "SPI_CS":   "p17"
+        },
+        "UBLOX_EVK_ODIN_W2": {
+            "SPI_MOSI": "D11",
+            "SPI_MISO": "D12",
+            "SPI_CLK": "D13",
+            "SPI_CS": "D10"
         }
     }
 }
