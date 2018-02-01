@@ -19,6 +19,14 @@
 #include <mbed.h>
 #include "BlockDevice.h"
 
+
+// Version info
+// Major (top-nibble), incremented on backwards incompatible changes
+// Minor (bottom-nibble), incremented on feature additions
+#define SPIF_DRIVER_VERSION 0x00010001
+#define SPIF_DRIVER_VERSION_MAJOR (0xffff & (SPIF_DRIVER_VERSION >> 16))
+#define SPIF_DRIVER_VERSION_MINOR (0xffff & (SPIF_DRIVER_VERSION >>  0))
+
  
 /** BlockDevice for SPI based flash devices
  *  such as the MX25R or SST26F016B
