@@ -37,3 +37,53 @@ install:
     - git clone https://github.com/armmbed/mbed-os.git
     # Install python dependencies
     - sudo pip install -r mbed-os/requirements.txt
+
+deploy:
+    # Let before_deploy take over
+    provider: script
+    script: 'true'
+    on:
+        branch: versioning
+
+before_deploy:
+    # Update tag for version
+    - SPIF_DRIVER_VERSION=$(
+        grep -ox '#define SPIF_DRIVER_VERSION .*' SPIFBlockDevice.h
+            | cut -d ' ' -f3)
+    - SPIF_DRIVER_VERSION_MAJOR=$((0xffff & ($SPIF_DRIVER_VERSION >> 16)))
+    - SPIF_DRIVER_VERSION_MINOR=$((0xffff & ($SPIF_DRIVER_VERSION >>  0)))
+    - SPIF_DRIVER_VERSION="v$SPIF_DRIVER_VERSION_MAJOR.$SPIF_DRIVER_VERSION_MINOR"
+    - |
+      curl -u $MBED_BOT -X POST \
+        https://api.github.com/repos/$TRAVIS_REPO_SLUG/git/refs \
+        -d "{
+          \"ref\": \"refs/tags/$SPIF_DRIVER_VERSION\",
+          \"sha\": \"$TRAVIS_COMMIT\"
+        }"
+    - |
+      curl -f -u $MBED_BOT -X PATCH \
+        https://api.github.com/repos/$TRAVIS_REPO_SLUG/git/refs/tags/$SPIF_DRIVER_VERSION \
+        -d "{
+          \"sha\": \"$TRAVIS_COMMIT\"
+        }"
+    # Create release notes from commits
+    - SPIF_DRIVER_PREV_VERSION="v$SPIF_DRIVER_VERSION_MAJOR.$(($SPIF_DRIVER_VERSION_MINOR-1))"
+    - |
+      if [ $(git tag -l "$SPIF_DRIVER_PREV_VERSION") ]
+      then
+        curl -u $MBED_BOT -X POST \
+            https://api.github.com/repos/$TRAVIS_REPO_SLUG/releases \
+            -d "{
+                \"tag_name\": \"$SPIF_DRIVER_VERSION\"
+            }"
+        curl -f -u $MBED_BOT -X PATCH \
+            https://api.github.com/repos/$TRAVIS_REPO_SLUG/releases/$( \
+                curl -f https://api.github.com/repos/$TRAVIS_REPO_SLUG/releases/tags/$SPIF_DRIVER_VERSION \
+                    | jq -r '.id'
+            ) \
+            -d "$( \
+                git log --oneline $SPIF_DRIVER_PREV_VERSION.. \
+                    --grep='^Merge' --invert-grep \
+                    | jq -sR '{"body":.}'
+            )"
+      fi
