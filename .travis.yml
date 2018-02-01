@@ -14,15 +14,26 @@ script:
           -t GCC_ARM -m K82F --source=. --build=BUILD/TESTS/K82F/GCC_ARM -j0
           -n tests*
 
-python:
-    - "2.7"
+cache:
+  pip: true
+  directories:
+    - $HOME/.cache/apt
+
+before_install:
+    # Make sure pipefail
+    - set -o pipefail
+    # Setup apt to cache
+    - mkdir -p $HOME/.cache/apt/partial
+    - sudo rm -rf /var/cache/apt/archives
+    - sudo ln -s $HOME/.cache/apt /var/cache/apt/archives
+    # Setup ppa to make sure arm-none-eabi-gcc is correct version
+    - sudo add-apt-repository -y ppa:team-gcc-arm-embedded/ppa
+    - sudo apt-get update -qq
 
 install:
-      # Get arm-none-eabi-gcc
-    - sudo add-apt-repository -y ppa:terry.guo/gcc-arm-embedded
-    - sudo apt-get update -qq
-    - sudo apt-get install -qq gcc-arm-none-eabi --force-yes
-      # Get dependencies
+    # Get arm-none-eabi-gcc
+    - sudo apt-get install -qq gcc-arm-embedded --force-yes
+    # Get dependencies
     - git clone https://github.com/armmbed/mbed-os.git
-      # Install python dependencies
+    # Install python dependencies
     - sudo pip install -r mbed-os/requirements.txt
