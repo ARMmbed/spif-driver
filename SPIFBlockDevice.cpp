@@ -168,7 +168,7 @@ void SPIFBlockDevice::_cmdread(
     _spi.write(op);
 
     for (uint32_t i = 0; i < addrc; i++) {
-        _spi.write(0xff & (addr >> 8*(addrc-1 - i)));
+        _spi.write(0xff & (addr >> (8 * (addrc - 1 - i))));
     }
 
     for (uint32_t i = 0; i < retc; i++) {
@@ -180,7 +180,7 @@ void SPIFBlockDevice::_cmdread(
         printf("spif <- %02x", op);
         for (uint32_t i = 0; i < addrc; i++) {
             if (i < addrc) {
-                printf("%02lx", 0xff & (addr >> 8*(addrc-1 - i)));
+                printf("%02lx", 0xff & (addr >> (8 * (addrc - 1 - i))));
             } else {
                 printf("  ");
             }
@@ -204,7 +204,7 @@ void SPIFBlockDevice::_cmdwrite(
     _spi.write(op);
 
     for (uint32_t i = 0; i < addrc; i++) {
-        _spi.write(0xff & (addr >> 8*(addrc-1 - i)));
+        _spi.write(0xff & (addr >> (8 * (addrc - 1 - i))));
     }
 
     for (uint32_t i = 0; i < argc; i++) {
@@ -216,7 +216,7 @@ void SPIFBlockDevice::_cmdwrite(
         printf("spif -> %02x", op);
         for (uint32_t i = 0; i < addrc; i++) {
             if (i < addrc) {
-                printf("%02lx", 0xff & (addr >> 8*(addrc-1 - i)));
+                printf("%02lx", 0xff & (addr >> (8 * (addrc - 1 - i))));
             } else {
                 printf("  ");
             }
