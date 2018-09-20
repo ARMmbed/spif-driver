@@ -1,6 +1,6 @@
 # Warning
 Starting from mbed-os 5.10 this repository is deprecated. 
-Please refer to mbed-os 5.10 documentation for more detail on how to enable SPIF support.
+Please refer to mbed-os 5.10 [documentation](https://github.com/ARMmbed/mbed-os-5-docs/blob/development/docs/api/storage/SPIFBlockDevice.md) and [code](https://github.com/ARMmbed/mbed-os/tree/master/components/storage/blockdevice/COMPONENT_SPIF) for more detail on how to enable SPIF support.
 
 # SPI Flash Driver
 
