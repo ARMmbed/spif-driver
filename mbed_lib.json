@@ -61,6 +61,12 @@
              "SPI_MISO": "PA_6",
              "SPI_CLK":  "PA_5",
              "SPI_CS":   "PB_12"
-       }
+       },
+	"NRF52_DK": {
+            "SPI_MOSI": "p23",
+            "SPI_MISO": "p24",
+            "SPI_CLK":  "p25",
+            "SPI_CS":   "p17"
+        }
     }
 }
