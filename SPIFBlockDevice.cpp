@@ -22,6 +22,13 @@
 
 #include "mbed_trace.h"
 #define TRACE_GROUP "SPIF"
+
+/* Started from version 5.10.0 SPIFBlockDevice external repo is deprecated. 
+   please use the SPIFBlockDevice component inside mbed-os.*/
+#if defined(MBED_MAJOR_VERSION) && MBED_MAJOR_VERSION >= 5 && (MBED_VERSION >= MBED_ENCODE_VERSION(5,10,0))
+#error "Started from version 5.10.0 SPIFBlockDevice external repo is deprecated. please use the SPIFBlockDevice component inside mbed-os."
+#endif
+
 using namespace mbed;
 
 /* Default SPIF Parameters */
